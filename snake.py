@@ -1,31 +1,32 @@
-from flask import Flask, request, jsonify
-import random
-
-app = Flask(__name__)
-
-@app.route("/start", methods=["POST"])
-def start():
-    # NOTE: 'request' contains the data which was sent to us about the Snake game
-    # after every POST to our server 
-    print(request.__dict__) 
-    
-    snake = {
-        "color": "ffffff",
-        "name": "My Snake's Name!"
-    }
-
-    return jsonify(snake)
-
-@app.route("/move", methods=["POST"])
-def move():
-    print(request.__dict__)
-
-    moves = ["up", "down", "left", "right"]
-    response = {
-        "move": random.choice(moves)
-    }
-
-    return jsonify(response)
-
-if __name__ == "__main__":
-    app.run(port=8080, debug=True)
+moves = 'north south east west'.split()
+ 
+board = [[] for _ in N]
+ 
+change = dict(
+    north=(0, 1),
+    south=(0, -1),
+    east=(1, 0),
+    west=(-1, 0))
+ 
+def best(moves):
+    return max(moves, key=lambda x: h(x))
+ 
+def h(move):
+    return sum(
+        closest(i, j, snakes)
+        for i in range(N)
+        for j in range(N)
+    )
+ 
+def closest(x, y, snakes):
+        me = snake[0]
+ 
+        closest = min(snakes,
+            key=lambda snake:
+            dist(snake,
+                 (x, y)))
+ 
+        return me == closest
+ 
+def dist(x, y):
+    return abs(x[0] - y[0]) + abs(x[1] - y[1])
