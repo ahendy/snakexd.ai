@@ -1,32 +1,58 @@
-moves = 'north south east west'.split()
- 
-board = [[] for _ in N]
+
+moves = ["up", "down", "left", "right"]
  
 change = dict(
-    north=(0, 1),
-    south=(0, -1),
+    north=(0, -1),
+    south=(0, 1),
     east=(1, 0),
     west=(-1, 0))
+
+SAFE = set(["0", "F"])
+
+def safe(board, state, x, y):
+    return 0 <= y < state.height and 0 <= x < state.height and board[y][x] in SAFE
+
+def best(state, board):
+    return max(moves, key=lambda x: h(state, board))
  
-def best(moves):
-    return max(moves, key=lambda x: h(x))
- 
-def h(move):
+def h(state, board):
     return sum(
-        closest(i, j, snakes)
-        for i in range(N)
-        for j in range(N)
+        closest(i, j, state)
+        for i in range(state.width)
+        for j in range(state.height)
+        if safe(board, state, i, j)
     )
  
-def closest(x, y, snakes):
-        me = snake[0]
- 
+def closest(x, y, state):
+        me = state.me
+        snakes = state.snakes
+
         closest = min(snakes,
             key=lambda snake:
-            dist(snake,
-                 (x, y)))
+            dist(
+                snake['coords'][0], # account for entire snake bodies? instead of just head
+                (x, y)
+            )
+        )
  
-        return me == closest
- 
-def dist(x, y):
-    return abs(x[0] - y[0]) + abs(x[1] - y[1])
+        return me == closest 
+
+def update_board(state):
+    snakes = state.snakes
+    food = state.food
+    width = state.width
+    height = state.height
+
+    board = [['0']*width for _ in range(height)]
+    for snake in snakes:
+        for (x, y) in snake['coords']:
+            print x, y
+            board[y][x] = snake['id']
+    
+    for (x, y) in food:
+        board[y][x] = "F"
+
+    return board
+
+def dist(p1, p2):
+    return abs(p1[0] - p2[0]) + abs(p1[1] - p2[1])
