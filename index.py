@@ -1,15 +1,13 @@
 from flask import Flask, request, jsonify
 import json
 import random
-from snake import best, update_board
+from snake import best, update_board, GameState
 import datetime
-from collections import namedtuple
 
 app = Flask(__name__)
 N = 15
 moves = ["up", "down", "left", "right"]
 
-GameState = namedtuple("game_state", ["me", "snakes", "food", "width", "height"])
 
 
 @app.route("/start", methods=["POST"])
@@ -33,15 +31,17 @@ def move():
     t0 = datetime.datetime.now()
     data = json.loads(request.data)
     
-    state = me, snakes, food, width, height, = get_params(data)
+    state = get_params(data)
     board = update_board(state)
 
-
+    move = best(state, board)
     response = {
-        "move": best(state, board)
+        "move": move
     }
     t1 = datetime.datetime.now()
     print("Time to run: ", (t1 - t0).total_seconds())
+    print(move)
+    
     return jsonify(response)
 
 def get_params(data):
@@ -50,9 +50,12 @@ def get_params(data):
     food = data['food']
     width = data['width']
     height = data['height']
-    me = data['you']
+    my_id = data['you']
 
-    return GameState(me, snakes, food, width, height)
+    mysnake = [snake for snake in snakes if snake['id'] == my_id][0]
+    head = mysnake['coords'][0]
+
+    return GameState(mysnake, snakes, food, width, height, head)
 
 
 
