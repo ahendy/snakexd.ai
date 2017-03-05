@@ -3,6 +3,7 @@ import json
 import random
 from snake import best, update_board, GameState
 import datetime
+import os
 
 app = Flask(__name__)
 
