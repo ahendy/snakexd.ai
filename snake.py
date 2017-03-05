@@ -74,7 +74,7 @@ def closest(x, y, state, board, depth):
             )
         )   
         x, y = closest['coords'][0]
-        return (me == closest['id']) * (1 + 45*(101-closest['health_points']) * (board[y][x] == 'F') + 0.5*(best(state, board, depth-1) if depth <= 0 else 0))
+        return (me == closest['id']) * (1 + 40*(101-closest['health_points'])**2 * (board[y][x] == 'F') + 0.5*(best(state, board, depth-1) if depth <= 0 else 0))
 
 def update_board(state):
     snakes = state.snakes
