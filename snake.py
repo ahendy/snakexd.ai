@@ -52,7 +52,7 @@ def h(state, board, move):
         state, board = apply_move(state, state.me, change[move])
         # printboard(board)
         return sum(
-            closest(i, j, state)
+            closest(i, j, state, board)
             for i in range(state.width)
                 for j in range(state.height)
                     if safe(board, state, i, j)
@@ -61,7 +61,7 @@ def h(state, board, move):
     else:
         return -5000
 
-def closest(x, y, state):
+def closest(x, y, state, board):
         me = state.me['id']
         snakes = state.snakes
 
@@ -71,9 +71,10 @@ def closest(x, y, state):
                 snake['coords'][0], # account for entire snake bodies? instead of just head
                 (x, y)
             )
-        )
- 
-        return me == closest['id']
+        )   
+        
+        x, y = snake['coords'][0]
+        return me == closest['id'] + 10*(board[y][x] == 'F')
 
 def update_board(state):
     snakes = state.snakes
