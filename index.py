@@ -31,7 +31,7 @@ def move():
     state = get_params(data)
     board = update_board(state)
 
-    move = best(state, board, 15)
+    move = best(state, board, 4)
     response = {
         "move": move
     }
