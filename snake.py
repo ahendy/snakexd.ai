@@ -73,7 +73,7 @@ def closest(x, y, state, board):
                 (x, y)
             )
         )   
-        x, y = closest['coords']
+        x, y = closest['coords'][0]
         return (me == closest['id'])*(1 + 10*(board[y][x] == 'F'))
 
 def update_board(state):
