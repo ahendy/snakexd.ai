@@ -59,6 +59,7 @@ def h(state, board, move):
         )
     
     else:
+
         return -5000
 
 def closest(x, y, state, board):
@@ -72,9 +73,8 @@ def closest(x, y, state, board):
                 (x, y)
             )
         )   
-        
-        x, y = snake['coords'][0]
-        return me == closest['id'] + 10*(board[y][x] == 'F')
+        x, y = closest['coords']
+        return (me == closest['id'])*(1 + 10*(board[y][x] == 'F'))
 
 def update_board(state):
     snakes = state.snakes
