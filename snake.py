@@ -1,4 +1,6 @@
 from collections import namedtuple
+import copy
+
 GameState = namedtuple("game_state", ["me", "snakes", "food", "width", "height", "head"])
 
 
@@ -8,27 +10,33 @@ change = dict(
     up=(0, -1),
     down=(0, 1),
     left=(-1, 0),
-    right=(1, 0))
+    right=(1, 0)
+)
 
 SAFE = set(["0", "F"])
 
 def safe(board, state, x, y):
-    return 0 <= y < state.height and 0 <= x < state.width and board[x][y] in SAFE
+    return 0 <= y < state.height and 0 <= x < state.width and board[y][x] in SAFE
 
 def best(state, board):
-    return max(moves, key=lambda move: h(state, board, move))
+    safe_move = copy.deepcopy(moves)
+    safe_move = [move for move in safe_move
+                if safe(board, state, state.me['coords'][0][0]+change[move][0], state.me['coords'][0][1]+ change[move][1])]
+
+    return max(safe_move, key=lambda move: h(state, board, move))
 
 def apply_move(state, snake, move):
-    state = GameState(**state._asdict())
+    state2 = GameState(**state._asdict())
+    state2 = state
     y1, x1 = head = snake['coords'][0]
     y, x = move
     snake['coords'] = [(y1+y, x1+x)] + snake['coords'][:-1]
 
-    for s in state.snakes:
+    for s in state2.snakes:
         if s['id'] == snake['id']:
             s['coords'] = snake['coords']
     
-    return state, update_board(state)
+    return state2, update_board(state2)
 
 def printboard(board):
     for x in board:
@@ -36,14 +44,13 @@ def printboard(board):
     print ""
 
 def h(state, board, move):
-    y1, x1 = head = state.me['coords'][0]
-    y, x = change[move]
-    print y, x
-    head = (y1+y, x1+x)
-    print head
+    x1, y1 = head = state.me['coords'][0]
+    x, y = change[move]
+    head = (x1+x, y1+y)
+
     if safe(board, state, head[0], head[1]):
         state, board = apply_move(state, state.me, change[move])
-        printboard(board)
+        # printboard(board)
         return sum(
             closest(i, j, state)
             for i in range(state.width)

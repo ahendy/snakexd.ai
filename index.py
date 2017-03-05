@@ -5,10 +5,6 @@ from snake import best, update_board, GameState
 import datetime
 
 app = Flask(__name__)
-N = 15
-moves = ["up", "down", "left", "right"]
-
-
 
 @app.route("/start", methods=["POST"])
 def start():
@@ -39,13 +35,11 @@ def move():
         "move": move
     }
     t1 = datetime.datetime.now()
-    print("Time to run: ", (t1 - t0).total_seconds())
-    print(move)
+    print("Time to run: ", (t1 - t0).total_seconds(), move)
     
     return jsonify(response)
 
 def get_params(data):
-    print(data.keys())
     snakes = data['snakes']
     food = data['food']
     width = data['width']
@@ -61,6 +55,7 @@ def get_params(data):
 
 
 if __name__ == "__main__":
-    app.run(port=8080, debug=True)
+    port = int(os.environ.get("PORT", 8080))
+    app.run(host='0.0.0.0', port=port, debug=True)
 
 
