@@ -55,7 +55,7 @@ def h(state, board, move, depth):
             closest(i, j, state, board, depth)
             for i in range(state.width)
                 for j in range(state.height)
-                    if safe(board, state, i, j)
+                    # if safe(board, state, i, j)
         )
     
     else:
