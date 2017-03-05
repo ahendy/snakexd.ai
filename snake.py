@@ -18,12 +18,12 @@ SAFE = set(["0", "F"])
 def safe(board, state, x, y):
     return 0 <= y < state.height and 0 <= x < state.width and board[y][x] in SAFE
 
-def best(state, board):
+def best(state, board, depth):
     safe_move = copy.deepcopy(moves)
     safe_move = [move for move in safe_move
                 if safe(board, state, state.me['coords'][0][0]+change[move][0], state.me['coords'][0][1]+ change[move][1])]
 
-    return max(safe_move, key=lambda move: h(state, board, move))
+    return max(safe_move, key=lambda move: h(state, board, move, depth))
 
 def apply_move(state, snake, move):
     state2 = GameState(**state._asdict())
@@ -43,7 +43,7 @@ def printboard(board):
         print x
     print ""
 
-def h(state, board, move):
+def h(state, board, move, depth):
     x1, y1 = head = state.me['coords'][0]
     x, y = change[move]
     head = (x1+x, y1+y)
@@ -52,7 +52,7 @@ def h(state, board, move):
         state, board = apply_move(state, state.me, change[move])
         # printboard(board)
         return sum(
-            closest(i, j, state, board)
+            closest(i, j, state, board, depth)
             for i in range(state.width)
                 for j in range(state.height)
                     if safe(board, state, i, j)
@@ -62,7 +62,7 @@ def h(state, board, move):
 
         return -5000
 
-def closest(x, y, state, board):
+def closest(x, y, state, board, depth):
         me = state.me['id']
         snakes = state.snakes
 
@@ -74,7 +74,7 @@ def closest(x, y, state, board):
             )
         )   
         x, y = closest['coords'][0]
-        return (me == closest['id'])*(1 + 10*(board[y][x] == 'F'))
+        return (me == closest['id'])*(1 + 10*(board[y][x] == 'F') + (best(state, board, depth-1) if depth <= 0 else 0))
 
 def update_board(state):
     snakes = state.snakes
