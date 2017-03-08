@@ -2,7 +2,7 @@
 
 ## the algorithm
 
-My simple heuristic was: chose the move that makes my snake enter the space that makes me closest to the most free spaces.
+The simple heuristic was: chose the move that makes my snake enter the space that makes me closest to the most free spaces.
 
 So for each available/safe space I do a search, updating state of the board and graph of the snake who is being moved at that call. And then calculating a score based off how many spaces the snake is closest to. This works well for moving around and entering spaces that are not populated/covering a lot of area - but - this doesn't translate well for collecting food and the snake would onky survive based off luck. There is a couple options my partner and I thought of.
 
