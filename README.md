@@ -5,7 +5,9 @@
  
  (optional but recommended)
     a. Install virtualenvwrapper https://virtualenvwrapper.readthedocs.io/en/latest/install.html 
+    
     b. "mkvirtualenv snake" or (python3) "mkvirtualenv --python=which python3 snake" 
+    
     c. "workon snake"
 
 cd to this directory (snakexd.ai) and "pip install -r requirements.txt"
