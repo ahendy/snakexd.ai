@@ -6,6 +6,7 @@ import datetime
 import os
 
 app = Flask(__name__)
+RECURSIVE_DEPTH = 5
 
 @app.route("/start", methods=["POST"])
 def start():
@@ -31,7 +32,7 @@ def move():
     state = get_params(data)
     board = update_board(state)
 
-    move = best(state, board, 4)
+    move = best(state, board, RECURSIVE_DEPTH)
     response = {
         "move": move
     }
